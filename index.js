@@ -57,15 +57,14 @@ MultiWrite.prototype._write = function (data, enc, cb) {
 }
 
 MultiWrite.prototype._end = function (cb) {
-  var self = this
-  loop(0)
+  var missing = this.streams.length
 
-  function loop (i) {
-    if (i >= self.streams.length) return cb()
-    end(self.streams[i], function (err) {
-      if (err) return cb(err)
-      loop(i + 1)
-    })
+  for (var i = 0; i < this.streams.length; i++) {
+    end(this.streams[i], done)
+  }
+
+  function done () {
+    if (!--missing) cb()
   }
 }
 
