@@ -6,6 +6,8 @@ Create a writable stream that writes to multiple other writeable streams
 npm install multi-write-stream
 ```
 
+[![build status](http://img.shields.io/travis/mafintosh/multi-write-stream.svg?style=flat)](http://travis-ci.org/mafintosh/multi-write-stream)
+
 ## Usage
 
 ``` js
