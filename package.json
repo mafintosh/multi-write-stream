@@ -1,6 +1,6 @@
 {
   "name": "multi-write-stream",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Create a writable stream that writes to multiple other writeable streams",
   "main": "index.js",
   "dependencies": {
