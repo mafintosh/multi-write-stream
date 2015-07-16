@@ -17,24 +17,27 @@ function MultiWrite (streams, opts) {
 
   var self = this
   streams.forEach(function (s) {
-    s.on('close', function () {
-      self.destroy()
-    })
-
-    s.on('error', function (err) {
-      self.destroy(err)
-    })
-
-    s.on('drain', function () {
-      self._drains--
-
-      if (!self._drains) {
-        var ondrain = self._ondrain
-        self._ondrain = noop
-        ondrain()
-      }
-    })
+    s.on('close', onclose)
+    s.on('error', onerror)
+    s.on('drain', ondrain)
   })
+
+  function onclose () {
+    self.destroy()
+  }
+
+  function onerror (err) {
+    self.destroy(err)
+  }
+
+  function ondrain () {
+    self._drains--
+    if (!self._drains) {
+      var ondrain = self._ondrain
+      self._ondrain = noop
+      ondrain()
+    }
+  }
 }
 
 MultiWrite.obj = function (streams, opts) {
