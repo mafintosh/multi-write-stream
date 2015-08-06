@@ -93,6 +93,7 @@ MultiWrite.prototype.end = function (data, enc, cb) {
 function noop () {}
 
 function end (ws, cb) {
+  if (ws === process.stdout || ws === process.stderr) return cb()
   if (ws._writableState) return ws.end(cb)
   ws.end()
   cb()
