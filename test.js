@@ -89,3 +89,16 @@ tape('destroy', function (t) {
 
   ws.destroy()
 })
+
+tape('stdout', function (t) {
+  t.plan(1)
+
+  var a = through()
+  var ws = multiwrite([process.stdout, a])
+
+  a.on('finish', function () {
+    t.ok(true, 'stdout not ended')
+  })
+
+  ws.end()
+})
