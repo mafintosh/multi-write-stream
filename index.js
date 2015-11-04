@@ -80,6 +80,7 @@ MultiWrite.prototype.remove = function (stream) {
 }
 
 MultiWrite.prototype._write = function (data, enc, cb) {
+  if (this.destroyed) return cb()
   if (data === SIGNAL_END) return this._end(cb)
 
   for (var i = 0; i < this.streams.length; i++) {
