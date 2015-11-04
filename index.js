@@ -32,19 +32,19 @@ function MultiWrite (streams, opts) {
   streams.forEach(add)
 
   function add (s) {
-    if (autoDestroy) {
-      s.on('close', onclose)
-      s.on('error', onerror)
-    }
+    s.on('close', onclose)
+    s.on('error', onerror)
     s.on('drain', ondrain)
   }
 
   function onclose () {
-    self.destroy()
+    if (autoDestroy) self.destroy()
+    else self.remove(this)
   }
 
   function onerror (err) {
-    self.destroy(err)
+    if (autoDestroy) self.destroy(err)
+    else self.remove(this)
   }
 
   function ondrain () {
