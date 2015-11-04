@@ -56,6 +56,7 @@ function MultiWrite (streams, opts) {
 }
 
 MultiWrite.obj = function (streams, opts) {
+  if (streams && !Array.isArray(streams)) return MultiWrite.obj([], streams)
   if (!opts) opts = {}
   opts.objectMode = true
   return new MultiWrite(streams, opts)
