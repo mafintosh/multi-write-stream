@@ -32,11 +32,25 @@ stream.end(function () {
 #### `stream = multi(arrayOfWritableStreams, [options])`
 
 Create a new multi write stream. Options are forwarded to the
-stream constructor.
+stream constructor. Other options include
+
+``` js
+{
+  autoDestroy: true // destroy the stream if a child stream errors
+}
+```
 
 #### `objStream = multi.obj(arrayOfWritableStreams, [options])`
 
 Same as above but sets `objectMode = true`
+
+#### `stream.add(otherStream)`
+
+Add a stream after instantiating the multi writer
+
+#### `stream.remove(otherStream)`
+
+Remove a stream after instantiating the multi writer
 
 ## License
 

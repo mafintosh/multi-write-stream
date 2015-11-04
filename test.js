@@ -90,6 +90,40 @@ tape('destroy', function (t) {
   ws.destroy()
 })
 
+tape('auto destroy', function (t) {
+  t.plan(2)
+
+  var a = through()
+  var ws = multiwrite([a])
+
+  a.on('close', function () {
+    t.ok(true, 'child destroyed')
+  })
+
+  ws.on('close', function () {
+    t.ok(true, 'parent stream destroyed')
+  })
+
+  a.destroy()
+})
+
+tape('no auto destroy', function (t) {
+  t.plan(1)
+
+  var a = through()
+  var ws = multiwrite([a], {autoDestroy: false})
+
+  a.on('close', function () {
+    t.ok(true, 'child destroyed')
+  })
+
+  ws.on('close', function () {
+    t.ok(false, 'parent stream destroyed')
+  })
+
+  a.destroy()
+})
+
 tape('stdout', function (t) {
   t.plan(1)
 
@@ -101,4 +135,57 @@ tape('stdout', function (t) {
   })
 
   ws.end()
+})
+
+tape('add later', function (t) {
+  t.plan(2)
+
+  var a = through()
+  var b = through()
+  var ws = multiwrite()
+
+  ws.add(a)
+  ws.write('a', function () {
+    setTimeout(function () {
+      ws.add(b)
+      ws.write('b')
+      ws.write('c')
+      ws.end()
+    }, 100)
+  })
+
+  a.pipe(concat(function (data) {
+    t.same(data.toString(), 'abc', 'same data')
+  }))
+
+  b.pipe(concat(function (data) {
+    t.same(data.toString(), 'bc', 'same data')
+  }))
+})
+
+tape('remove later', function (t) {
+  t.plan(2)
+
+  var a = through()
+  var b = through()
+  var ws = multiwrite([a, b])
+
+  ws.write('a', function () {
+    setTimeout(function () {
+      ws.remove(b)
+      ws.write('b')
+      ws.write('c')
+      ws.end(function () {
+        b.end()
+      })
+    }, 100)
+  })
+
+  a.pipe(concat(function (data) {
+    t.same(data.toString(), 'abc', 'same data')
+  }))
+
+  b.pipe(concat(function (data) {
+    t.same(data.toString(), 'a', 'same data')
+  }))
 })
