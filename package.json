@@ -4,6 +4,7 @@
   "description": "Create a writable stream that writes to multiple other writeable streams",
   "main": "index.js",
   "dependencies": {
+    "buffer-alloc": "^1.1.0",
     "readable-stream": "^2.0.1"
   },
   "devDependencies": {
