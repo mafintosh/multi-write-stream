@@ -1,7 +1,8 @@
 var stream = require('readable-stream')
 var util = require('util')
+var bufferAlloc = require('buffer-alloc')
 
-var SIGNAL_END = new Buffer([0])
+var SIGNAL_END = bufferAlloc(1)
 
 module.exports = MultiWrite
 
